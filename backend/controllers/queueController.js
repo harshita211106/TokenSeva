@@ -49,19 +49,24 @@ const joinQueue=async (req,res)=>{
         }
 
         // generating next token
-        console.log(queue.currentToken);
         queue.currentToken+=1;
 
         const token=`A${100+queue.currentToken}`;
+
+        const peopleAhead=queue.currentToken-1;
+        // waiting time calculation
+        const estimatedWaitTime=queue.averageserviceTime * peopleAhead;
 
         await queue.save();
 
         res.status(200).json({
             message:"Queue joined successfully!",
             token:token,
-            currentposition:queue.currentToken
+            currentposition:queue.currentToken,
+            estimatedWaitTime,
+            peopleAhead
+
         });
-        console.log(queue.currentToken);
 
     }
     catch(error){
