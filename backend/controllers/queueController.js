@@ -36,4 +36,38 @@ const getQueue=async (req,res)=>{
     }
 }
 
-module.exports={createQueue,getQueue,};
+
+// user join the queue controller
+const joinQueue=async (req,res)=>{
+    try{
+        const {queueID}=req.body;
+
+        const queue=await Queue.findById(queueID);
+
+        if(!queue){
+            return res.status(404).json({message: "Queue not found!"});
+        }
+
+        // generating next token
+        console.log(queue.currentToken);
+        queue.currentToken+=1;
+
+        const token=`A${100+queue.currentToken}`;
+
+        await queue.save();
+
+        res.status(200).json({
+            message:"Queue joined successfully!",
+            token:token,
+            currentposition:queue.currentToken
+        });
+        console.log(queue.currentToken);
+
+    }
+    catch(error){
+        res.status(500).json({ message: error.message});
+
+    }
+}
+
+module.exports={createQueue,getQueue,joinQueue,};
