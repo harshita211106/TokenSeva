@@ -53,7 +53,7 @@ const joinQueue=async (req,res)=>{
 
         const token=`A${100+queue.currentToken}`;
 
-        const peopleAhead=queue.currentToken-1;
+        const peopleAhead = queue.currentToken-queue.currentServingToken-1;
         // waiting time calculation
         const estimatedWaitTime=queue.averageserviceTime * peopleAhead;
 
@@ -75,4 +75,39 @@ const joinQueue=async (req,res)=>{
     }
 }
 
-module.exports={createQueue,getQueue,joinQueue,};
+// calling next token
+const callNextToken = async(req,res)=>{
+    try{
+        const {queueId} = req.body;
+        const queue=await Queue.findById(queueId);
+
+        if(!queue){
+            return res.status(404).json({
+                message:"Queue not found",
+            });
+        }
+
+        // if no more customers left
+        if(queue.currentServingToken >= queue.currentToken){
+            return res.status(400).json({
+                message:"No customers in queue",
+            });
+        }
+        
+        queue.currentServingToken+=1;
+
+        await queue.save();
+
+        res.status(200).json({
+            message:"Next token called",
+            servingToken: `A${100+queue.currentServingToken}`,
+        });
+
+    }catch(err){
+        res.status(500).json({
+            message:err.message,
+        });
+    }
+}
+
+module.exports={createQueue,getQueue,joinQueue,callNextToken};

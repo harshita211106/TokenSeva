@@ -11,6 +11,12 @@ const queueSchema=new mongoose.Schema({
         default:0,
     },
 
+    currentServingToken:{
+        type:Number,
+        default:0,
+
+    },
+
     averageserviceTime:{
         type:Number,
         default:5,
