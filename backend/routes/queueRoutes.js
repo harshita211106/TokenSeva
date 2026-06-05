@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const {createQueue,getQueue,joinQueue}=require("../controllers/queueController");
+const {createQueue,getQueue,joinQueue,callNextToken}=require("../controllers/queueController");
 
 // create queue route
 router.post("/create",createQueue);
@@ -12,6 +12,8 @@ router.get("/",getQueue);
 // join queue route
 router.post("/join",joinQueue);
 
+// call next customer
+router.put("/next",callNextToken);
 
 
 module.exports=router;
