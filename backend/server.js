@@ -3,7 +3,7 @@ const express=require("express");
 const dotenv=require("dotenv");
 const http=require("http");
 
-const {Server} = require("socket.io");
+const {intisocket, initSocket}=require("./sockets/socket");
 
 const connectDB=require("./config/db")
 
@@ -28,21 +28,8 @@ app.get("/",(req,res)=>{
 // create http server
 const server=http.createServer(app);
 
-// socket server
-const io=new Server(server,{
-    cors: {
-        origin: "*",
-    },
-});
-
-// socket connection
-io.on("connection",(socket)=>{
-    console.log("User connected:",socket.id);
-
-    socket.on("disconnect",()=>{
-        console.log("User disconnected");
-    });
-});
+// inatilize socket server
+initSocket(server);
 
 const port=process.env.PORT;
 
