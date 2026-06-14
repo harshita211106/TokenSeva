@@ -1,4 +1,5 @@
 const Queue=require("../models/queue")
+const {getIO}=require("../sockets/socket");
 
 // create queue controller
 const createQueue= async (req,res)=>{
@@ -40,9 +41,9 @@ const getQueue=async (req,res)=>{
 // user join the queue controller
 const joinQueue=async (req,res)=>{
     try{
-        const {queueID}=req.body;
+        const {queueId}=req.body;
 
-        const queue=await Queue.findById(queueID);
+        const queue=await Queue.findById(queueId);
 
         if(!queue){
             return res.status(404).json({message: "Queue not found!"});
@@ -97,6 +98,14 @@ const callNextToken = async(req,res)=>{
         queue.currentServingToken+=1;
 
         await queue.save();
+
+        const io=getIO();
+
+        io.emit("queueUpdated",{
+            queueId:queue._id,
+            currentServingToken:queue.currentServingToken,
+            currentToken:queue.currentToken,
+        });
 
         res.status(200).json({
             message:"Next token called",
