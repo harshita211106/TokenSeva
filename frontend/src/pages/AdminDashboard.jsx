@@ -5,6 +5,8 @@ import {
     callNextToken,
 } from "../services/queueService";
 
+import socket from "../socket/frontendSocket"
+
 
 function AdminDashboard() {
 
@@ -67,6 +69,13 @@ function AdminDashboard() {
 
     useEffect(()=>{
         fetchQueues();
+        socket.on("queueUpdated",()=>{
+            fetchQueues();
+        });
+
+        return () => {
+            socket.off("queueUpdated");
+        };
 
     },[]);
 

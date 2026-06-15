@@ -59,6 +59,13 @@ const joinQueue=async (req,res)=>{
         const estimatedWaitTime=queue.averageserviceTime * peopleAhead;
 
         await queue.save();
+         const io=getIO();
+
+        io.emit("queueUpdated",{
+            queueId:queue._id,
+            currentServingToken:queue.currentServingToken,
+            currentToken:queue.currentToken,
+        });
 
         res.status(200).json({
             message:"Queue joined successfully!",
