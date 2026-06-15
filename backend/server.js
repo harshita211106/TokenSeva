@@ -2,8 +2,10 @@
 const express=require("express");
 const dotenv=require("dotenv");
 const http=require("http");
+const cors = require("cors");
 
-const {intisocket, initSocket}=require("./sockets/socket");
+
+const {initSocket}=require("./sockets/socket");
 
 const connectDB=require("./config/db")
 
@@ -17,6 +19,10 @@ connectDB();
 const app=express();
 
 app.use(express.json());
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 
 // use route
 app.use("/api/queue",queueRoute);
