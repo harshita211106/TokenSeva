@@ -56,7 +56,7 @@ const joinQueue=async (req,res)=>{
 
         const peopleAhead = queue.currentToken-queue.currentServingToken-1;
         // waiting time calculation
-        const estimatedWaitTime=queue.averageserviceTime * peopleAhead;
+        const estimatedWaitTime=queue.averageServiceTime * peopleAhead;
 
         await queue.save();
          const io=getIO();
@@ -70,7 +70,7 @@ const joinQueue=async (req,res)=>{
         res.status(200).json({
             message:"Queue joined successfully!",
             token:token,
-            currentposition:queue.currentToken,
+            position:queue.currentToken,
             estimatedWaitTime,
             peopleAhead
 

@@ -17,7 +17,7 @@ const queueSchema=new mongoose.Schema({
 
     },
 
-    averageserviceTime:{
+    averageServiceTime:{
         type:Number,
         default:5,
     },
