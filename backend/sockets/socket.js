@@ -1,7 +1,7 @@
 let io;
 
 const initSocket= (server)=>{
-    const {Server} = require("socket.io");
+    const {Server, Socket} = require("socket.io");
 
     io=new Server(server,{
         cors:{
@@ -11,6 +11,11 @@ const initSocket= (server)=>{
 
     io.on("connection",(socket)=>{
         console.log("socket connected:",socket.id);
+
+        socket.on("joinQueueRoom",(queueId) => {
+            socket.join(queueId);
+            console.log(`Socket joined room: ${queueId}`);
+        });
 
         socket.on("disconnect",()=>{
             console.log("socket disconnected");

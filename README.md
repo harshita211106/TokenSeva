@@ -15,3 +15,20 @@ TokenSeva — A smart real-time queue management system that helps businesses ma
 - MongoDB database integration
 
 ---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- React.js
+- React Router
+- Axios
+- Socket.IO Client
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- Socket.IO
+
+---
