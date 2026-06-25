@@ -42,3 +42,11 @@ TokenSeva — A smart real-time queue management system that helps businesses ma
 - Call Next Token
 
 ---
+## ⚡ Real-Time Features
+
+Socket.IO is used for:
+- Live queue updates
+- Instant token status updates
+- Real-time admin/customer synchronization
+
+---
