@@ -76,58 +76,77 @@
         : 0;
 
         return (
-            <div>
-                <h1>Customer Queue</h1>
+            <div className="min-h-screen bg-gray-100 p-6">
+                <div className="max-w-3xl mx-auto">
 
-    {joinedData && (
+                <h1 className="text-4xl font-bold mb-8 text-center">
+                    Customer Queue</h1>
 
-                <>
+                <div className="bg-white rounded-2xl shadow-md p-6 mb-8">
 
-                    <h2>
+                     {joinedData && (
+                         
+                    <>
+
+                    <h2 className="text-3xl font-bold text-blue-600 mb-4 text-center">
                         Your Token: {joinedData.token}
                     </h2>
 
-                    <p>
+                    <div className="space-y-3 text-gray-700">
+                        
+                    <p className="text-lg">
                         Position: {joinedData.position}
                     </p>
 
-                    <p>
+                    <p className="text-lg">
                         People Ahead: {livePeopleAhead}
                     </p>
 
-                    <p>
+                    <p className="text-lg font-semibold text-orange-500">
                         Estimated Wait: {liveEstimatedWait} mins
                     </p>
 
-                    <hr />
+                    </div>
+                    
 
-                </>
+                    </>
 
-            )}
+                        )}
+                </div>
             
+        <div className="bg-white rounded-2xl shadow-md p-6">
         
+        {!queue && (
+  <div className="bg-white p-6 rounded-xl text-center shadow-md">
+    Queue not found
+  </div>
+        )}
+
         {queue &&(
             <div>
 
-                <h3>{queue.name}</h3>
+                <h3 className="text-2xl font-semibold mb-4">{queue.name}</h3>
 
-                <p>
+                <p className="text-lg text-green-700 font-medium mb-2">
                     Current Serving: {queue.currentServingToken}
                 </p>
 
-                <p>
+                <p className="text-gray-700 mb-4">
                     Current Token: {queue.currentToken}
                 </p>
 
-                <button onClick={() => handleJoinQueue(queueId)}>
+                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium transition"
+                 onClick={() => handleJoinQueue(queueId)}>
                     Join Queue
                 </button>
 
-                <hr/>
+                
                 
             </div>
 
-        )}
+            )}
+        </div>
+           </div>
         </div>
     )
     }
