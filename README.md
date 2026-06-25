@@ -32,3 +32,13 @@ TokenSeva — A smart real-time queue management system that helps businesses ma
 - Socket.IO
 
 ---
+
+## 📡 Current Backend APIs
+
+### Queue APIs
+- Create Queue
+- Get All Queues
+- Join Queue
+- Call Next Token
+
+---

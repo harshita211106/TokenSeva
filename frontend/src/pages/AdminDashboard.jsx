@@ -86,15 +86,15 @@ function AdminDashboard() {
             <div className="max-w-5xl mx-auto">
             <h1 className="text-4xl font-bold mb-6">Admin Dashboard</h1>
 
-            <div className="flex gap-4 mb-6">
-            <input className="border p-3 rounded w-full"
+            <div className="flex flex-col md:flex-row gap-4 mb-8">
+            <input className="border border-gray-300 p-3 rounded-lg w-full bg-white"
             type="text"
             placeholder="Queue Name"
             value={name}
             onChange={(e)=>setName(e.target.value)}
             />
 
-            <input className="border p-3 rounded w-full"
+            <input className="border border-gray-300 p-3 rounded-lg w-full bg-white"
             type="number"
             placeholder="Average Service Time"
             value={averageServiceTime}
@@ -102,35 +102,44 @@ function AdminDashboard() {
             />
             </div>
 
-            <button className="bg-blue-500 text-white px-5 rounded" onClick={handleCreateQueue}>
+            <button className="bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded-lg font-medium transition"
+             onClick={handleCreateQueue}>
                 Create Queue
             </button>
 
-            <hr/>
-
+            
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {queues.map( (queue) => (
-                <div key={queue._id}>
-                    <h3>{queue.name}</h3>
-
-                    <QRCode value="{`http://localhost:5173/queue/${queue._id}`}"/>
-
-                    <p>
+                <div key={queue._id}
+                className="bg-white rounded-xl shadow-md p-6"
+                >
+                    <h3 className="text-2xl font-semibold mb-4">{queue.name}</h3>
+                    <p className="text-sm text-gray-600 mb-2 text-center">Scan to Join Queue</p>
+                   <div className="mt-6 flex justify-center"> 
+                    <QRCode value={`http://localhost:5173/queue/${queue._id}`}/>
+                    </div>
+                <div className="space-y-2 mb-4">
+                    <p className="text-gray-700">
                         Current Token: {queue.currentToken}
                     </p>
 
-                    <p>
+                    <p className="text-gray-700">
                         Serving: {queue.currentServingToken}
                     </p>
+                </div>
 
-                    <button onClick={()=>handleNext(queue._id)}
+                    <button className="bg-green-600 mt-2 hover:bg-green-700 text-white px-5 py-2 rounded-lg transition"
+                     onClick={()=>handleNext(queue._id)}
                     >
                         Next Token
                     
                     </button>
 
-                    <hr/>
+                    
                 </div>
             ))}
+            </div>
             </div>
         </div>
     );
