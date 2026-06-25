@@ -82,24 +82,27 @@ function AdminDashboard() {
     },[]);
 
     return(
-        <div>
-            <h1>Admin Dashboard</h1>
+        <div className="min-h-screen bg-gray-100 p-6">
+            <div className="max-w-5xl mx-auto">
+            <h1 className="text-4xl font-bold mb-6">Admin Dashboard</h1>
 
-            <input
+            <div className="flex gap-4 mb-6">
+            <input className="border p-3 rounded w-full"
             type="text"
             placeholder="Queue Name"
             value={name}
             onChange={(e)=>setName(e.target.value)}
             />
 
-            <input
+            <input className="border p-3 rounded w-full"
             type="number"
             placeholder="Average Service Time"
             value={averageServiceTime}
             onChange={(e)=>setAverageServiceTime(e.target.value)}
             />
+            </div>
 
-            <button onClick={handleCreateQueue}>
+            <button className="bg-blue-500 text-white px-5 rounded" onClick={handleCreateQueue}>
                 Create Queue
             </button>
 
@@ -128,6 +131,7 @@ function AdminDashboard() {
                     <hr/>
                 </div>
             ))}
+            </div>
         </div>
     );
 }
