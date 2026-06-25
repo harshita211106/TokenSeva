@@ -14,5 +14,6 @@ backend downloads-
  axios (ensures HTTP requests to REST APIs)
  socket.io-client (front-end client side realtime updates)
  react-router-dom (enables dynamic routing)
+ react-qr-code (QR code generator for react)
  
 

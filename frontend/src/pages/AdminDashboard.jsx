@@ -7,6 +7,8 @@ import {
 
 import socket from "../socket/frontendSocket"
 
+import QRCode from "react-qr-code";
+
 
 function AdminDashboard() {
 
@@ -106,6 +108,8 @@ function AdminDashboard() {
             {queues.map( (queue) => (
                 <div key={queue._id}>
                     <h3>{queue.name}</h3>
+
+                    <QRCode value="{`http://localhost:5173/queue/${queue._id}`}"/>
 
                     <p>
                         Current Token: {queue.currentToken}

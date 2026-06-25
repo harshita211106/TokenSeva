@@ -8,7 +8,7 @@ function App(){
   return(
     <Routes>
       <Route path="/admin" element={<AdminDashboard/>}/>
-      <Route path="/queue" element={<CustomerQueue/>}/>
+      <Route path="/queue/:queueId" element={<CustomerQueue/>}/>
     </Routes>
   );
 }
