@@ -5,19 +5,27 @@
     import { getQueues } from "../services/queueService";
     import {joinQueue} from "../services/customerQueueService";
 
+    import { useParams } from "react-router-dom";
+    
+
 
     function CustomerQueue() {
+
+        const {queueId} = useParams();
         
-        const [queues,setQueues] = useState([]);
+        const [queue,setQueue] = useState(null);
 
         const [joinedData,setJoinedData] = useState(null);
 
         // fetch queues
-        const fetchQueues = async () => {
+        const fetchQueue = async () => {
             try{
                 const data=await getQueues();
-                setQueues(data);
 
+                const selectedQueue = data.find((q) => q._id === queueId);
+
+                setQueue(selectedQueue);
+            
             }
             catch(error){
                 console.log(error);
@@ -44,27 +52,25 @@
 
         useEffect(()=>{
 
-            fetchQueues();
+            fetchQueue();
 
             socket.on("queueUpdated",() => {
-                fetchQueues();
+                fetchQueue();
             });
 
             return ()=>{
                 socket.off("queueUpdated");
             };
         }, []);
-        const joinedQueue = queues.find(
-            (queue) => queue._id === joinedData?.queueId
-        );
+      
 
-        const livePeopleAhead = joinedQueue? joinedData.position -
-        joinedQueue.currentServingToken-1 
+        const livePeopleAhead = queue &&  joinedData ? joinedData.position -
+        queue.currentServingToken-1 
         :0;
         
-        const liveEstimatedWait = joinedQueue
+        const liveEstimatedWait = queue && joinedData
         ? livePeopleAhead *
-        joinedQueue.averageServiceTime
+        queue.averageServiceTime
         : 0;
 
         return (
@@ -98,8 +104,8 @@
             )}
             
         
-        {queues.map((queue)=>(
-            <div key={queue._id}>
+        {queue &&(
+            <div>
 
                 <h3>{queue.name}</h3>
 
@@ -111,7 +117,7 @@
                     Current Token: {queue.currentToken}
                 </p>
 
-                <button onClick={() => handleJoinQueue(queue._id)}>
+                <button onClick={() => handleJoinQueue(queueId)}>
                     Join Queue
                 </button>
 
@@ -119,7 +125,7 @@
                 
             </div>
 
-        ))}
+        )}
         </div>
     )
     }
