@@ -61,7 +61,7 @@ const joinQueue=async (req,res)=>{
         await queue.save();
          const io=getIO();
 
-        io.emit("queueUpdated",{
+        io.to(queueId).emit("queueUpdated",{
             queueId:queue._id,
             currentServingToken:queue.currentServingToken,
             currentToken:queue.currentToken,
@@ -108,7 +108,7 @@ const callNextToken = async(req,res)=>{
 
         const io=getIO();
 
-        io.emit("queueUpdated",{
+        io.to(queueId).emit("queueUpdated",{
             queueId:queue._id,
             currentServingToken:queue.currentServingToken,
             currentToken:queue.currentToken,

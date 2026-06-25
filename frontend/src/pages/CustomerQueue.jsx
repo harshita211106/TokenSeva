@@ -54,6 +54,8 @@
 
             fetchQueue();
 
+            socket.emit("joinedQueueRoom",queueId);
+
             socket.on("queueUpdated",() => {
                 fetchQueue();
             });
