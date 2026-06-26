@@ -17,6 +17,8 @@
 
         const [joinedData,setJoinedData] = useState(null);
 
+        const [joining, setJoining] = useState(false);
+
         // fetch queues
         const fetchQueue = async () => {
             try{
@@ -37,6 +39,7 @@
         // join queue
         const handleJoinQueue = async (queueId) => {
             try{
+                setJoining(true);
                 const data= await joinQueue(queueId);
 
                 setJoinedData({
@@ -48,13 +51,16 @@
                 console.log(error);
 
             }
+            finally {
+                setJoining(false);
+            }
         };
 
         useEffect(()=>{
 
             fetchQueue();
 
-            socket.emit("joinedQueueRoom",queueId);
+            socket.emit("joinQueueRoom",queueId);
 
             socket.on("queueUpdated",() => {
                 fetchQueue();
@@ -66,9 +72,13 @@
         }, []);
       
 
-        const livePeopleAhead = queue &&  joinedData ? joinedData.position -
-        queue.currentServingToken-1 
-        :0;
+        const livePeopleAhead = queue &&  joinedData 
+    ? Math.max(
+        joinedData.position -
+        queue.currentServingToken - 1,
+        0
+      )
+    : 0;
         
         const liveEstimatedWait = queue && joinedData
         ? livePeopleAhead *
@@ -105,6 +115,11 @@
                     <p className="text-lg font-semibold text-orange-500">
                         Estimated Wait: {liveEstimatedWait} mins
                     </p>
+                    {livePeopleAhead === 0 && (
+                    <p className="text-green-600 font-bold text-xl mt-4 text-center">
+                        It's Your Turn!
+                    </p>
+                    )}
 
                     </div>
                     
@@ -118,7 +133,17 @@
         
         {!queue && (
   <div className="bg-white p-6 rounded-xl text-center shadow-md">
-    Queue not found
+    <div className="bg-white p-8 rounded-2xl text-center shadow-md">
+
+        <h2 className="text-2xl font-bold mb-2">
+            Queue Not Found
+         </h2>
+
+        <p className="text-gray-600">
+             Please scan a valid QR code.
+         </p>
+
+</div>
   </div>
         )}
 
@@ -128,26 +153,35 @@
                 <h3 className="text-2xl font-semibold mb-4">{queue.name}</h3>
 
                 <p className="text-lg text-green-700 font-medium mb-2">
-                    Current Serving: {queue.currentServingToken}
+                    Current Serving: A{100 + queue.currentServingToken}
                 </p>
 
                 <p className="text-gray-700 mb-4">
-                    Current Token: {queue.currentToken}
+                    Current Token: A{100 + queue.currentToken}
                 </p>
 
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium transition"
+                <button className={`w-full py-3 rounded-xl font-medium text-white transition
+                    ${
+                    joining
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                    }`}
+                disabled={joining}
                  onClick={() => handleJoinQueue(queueId)}>
-                    Join Queue
+                    {joining ? "Joining..." : "Join Queue"}
                 </button>
 
-                
-                
-            </div>
+                </div>
 
             )}
+            </div>
         </div>
-           </div>
-        </div>
+    <p className="text-center text-sm text-gray-500 mt-8">
+       TokenSeva: Real-time Queue Management System
+    </p>
+           
+    </div>
+        
     )
     }
     
