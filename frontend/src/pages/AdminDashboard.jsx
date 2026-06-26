@@ -1,4 +1,4 @@
-import {  useEffect,useState } from "react";
+import {  useEffect, useState } from "react";
 import {
     getQueues,
     createQueue,
@@ -17,6 +17,8 @@ function AdminDashboard() {
     const [name,setName] = useState("");
 
     const [averageServiceTime,setAverageServiceTime] =  useState("");
+
+    const [loading,setLoading] = useState(false);
 
     // fetch queues
     const fetchQueues = async () =>{
@@ -37,21 +39,24 @@ function AdminDashboard() {
             return alert("Please fill all fields");
             }
         try{
+            setLoading(true);
             await createQueue({
                 name,
                 averageServiceTime: Number(averageServiceTime),
             });
-            fetchQueues();
+           await fetchQueues();
 
             setName("");
             setAverageServiceTime("");
 
         }catch(error){
             console.log(error);
-
-
         }
-    };
+        
+        finally {
+          setLoading(false);
+    }
+};
 
 
     // call next token
@@ -59,7 +64,7 @@ function AdminDashboard() {
         try{
             await callNextToken(queueId);
 
-            fetchQueues();
+            await fetchQueues();
 
         }
         catch(error){
@@ -102,15 +107,25 @@ function AdminDashboard() {
             />
             </div>
 
-            <button className="bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded-lg font-medium transition"
-             onClick={handleCreateQueue}>
-                Create Queue
+            <button className={`px-6 py-3 rounded-lg font-medium text-white transition
+            ${
+                loading
+                ?"bg-gray-400 cursor-not-allowed"
+                :"bg-blue-600 hover:bg-blue-700"
+            }`}
+            
+             onClick={handleCreateQueue}
+             disabled={loading}>
+                {loading ? "creating..." : "Create Queue"}
             </button>
 
             
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {queues.map( (queue) => (
+            {queues.map( (queue) => {
+                const queueEmpty = queue.currentServingToken >= queue.currentToken;
+                return(
+
                 <div key={queue._id}
                 className="bg-white rounded-xl shadow-md p-6"
                 >
@@ -129,16 +144,26 @@ function AdminDashboard() {
                     </p>
                 </div>
 
-                    <button className="bg-green-600 mt-2 hover:bg-green-700 text-white px-5 py-2 rounded-lg transition"
+                    <button className={`mt-2 px-5 py-2 rounded-lg text-white transition
+                        ${
+                            queueEmpty
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-green-600 hover:bg-green-700"
+                        }`}
                      onClick={()=>handleNext(queue._id)}
+                     disabled={queueEmpty}
                     >
-                        Next Token
+                        {queueEmpty
+                            ? "Queue Empty"
+                            : "Next Token"}
                     
                     </button>
 
                     
                 </div>
-            ))}
+                )
+            }
+            )}
             </div>
             </div>
         </div>
