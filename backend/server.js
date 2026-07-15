@@ -11,6 +11,7 @@ const connectDB=require("./config/db")
 
 // import route
 const queueRoute=require("./routes/queueRoutes");
+const adminRoutes=require("./routes/adminRoutes");
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(cors({
 
 // use route
 app.use("/api/queue",queueRoute);
+app.use("/api/admin",adminRoutes);
 
 app.get("/",(req,res)=>{
     res.send("Server is running" 
