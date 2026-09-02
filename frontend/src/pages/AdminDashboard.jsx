@@ -75,13 +75,15 @@ function AdminDashboard() {
     }
 
     useEffect(()=>{
-        fetchQueues();
-        socket.on("queueUpdated",()=>{
-            fetchQueues();
-        });
+        const refresh = () => {
+            getQueues().then(setQueues).catch(console.log);
+        };
+
+        refresh();
+        socket.on("queueUpdated",refresh);
 
         return () => {
-            socket.off("queueUpdated");
+            socket.off("queueUpdated",refresh);
         };
 
     },[]);

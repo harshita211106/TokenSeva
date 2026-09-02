@@ -21,23 +21,6 @@
 
         const [joining, setJoining] = useState(false);
 
-        // fetch queues
-        const fetchQueue = async () => {
-            try{
-                const data=await getQueues();
-
-                const selectedQueue = data.find((q) => q._id === queueId);
-
-                setQueue(selectedQueue);
-            
-            }
-            catch(error){
-                console.log(error);
-
-            }
-        };
-
-
         // join queue
         const handleJoinQueue = async (queueId) => {
             try{
@@ -59,19 +42,26 @@
         };
 
         useEffect(()=>{
+            const fetchQueue = async () => {
+                try{
+                    const data=await getQueues();
+                    setQueue(data.find((q) => q._id === queueId) ?? null);
+                }
+                catch(error){
+                    console.log(error);
+                }
+            };
 
             fetchQueue();
 
             socket.emit("joinQueueRoom",queueId);
 
-            socket.on("queueUpdated",() => {
-                fetchQueue();
-            });
+            socket.on("queueUpdated",fetchQueue);
 
             return ()=>{
-                socket.off("queueUpdated");
+                socket.off("queueUpdated",fetchQueue);
             };
-        }, []);
+        }, [queueId]);
       
 
         const livePeopleAhead = queue &&  joinedData 
