@@ -39,7 +39,7 @@ const server=http.createServer(app);
 // inatilize socket server
 initSocket(server);
 
-const port=process.env.PORT;
+const port=process.env.PORT || 5000;
 
 server.listen(port,()=>{
     console.log(`server is running on port: http://localhost:${port}`);

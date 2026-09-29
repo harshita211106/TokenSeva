@@ -25,6 +25,11 @@ function AdminDashboard() {
         try{
             const data= await getQueues();
             setQueues(data);
+            
+        
+            data.forEach((queue) => {
+                socket.emit("joinQueueRoom", queue._id);
+        });
 
         }
         catch(error){
@@ -74,14 +79,18 @@ function AdminDashboard() {
         
     }
 
-    useEffect(()=>{
+useEffect(()=>{
+    fetchQueues();
+    
+    const handleQueueUpdated = () => {
         fetchQueues();
-        socket.on("queueUpdated",()=>{
-            fetchQueues();
-        });
+    };
 
-        return () => {
-            socket.off("queueUpdated");
+    socket.on("queueUpdated", handleQueueUpdated);
+
+
+    return () => {
+            socket.off("queueUpdated",handleQueueUpdated);
         };
 
     },[]);
